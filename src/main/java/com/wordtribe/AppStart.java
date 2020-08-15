@@ -39,6 +39,7 @@ public class AppStart extends Application {
             // Create main scene and load to scene controller
             Scene main = new Scene(pane);
             main.setFill(Color.TRANSPARENT);
+            sceneController = new SceneController(main);
 
             // Launch app
             primaryStage.setResizable(false);

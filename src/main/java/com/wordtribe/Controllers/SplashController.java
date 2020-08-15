@@ -2,6 +2,7 @@ package com.wordtribe.Controllers;
 
 import com.wordtribe.AppStart;
 import com.wordtribe.Data.PathHandlers.OpenedTimedPaths;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ProgressBar;
@@ -24,14 +25,29 @@ public class SplashController {
         // Load recently opened filename and paths into memory
         OpenedTimedPaths.getInstance().loadPaths();
 
-        // Allow the splash screen to be draggable
+        /*
+        Allow the window to be draggable.
+        Assign an event handler when the mouse is pressed on the window,
+        Also for when the mouse is dragged with the window.
+         */
         splashAnchorPane.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-
+                xOffset = event.getSceneX();
+                yOffset = event.getSceneY();
             }
         });
 
+        splashAnchorPane.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                splashAnchorPane.getScene().getWindow().setX(event.getScreenX() - xOffset);
+                splashAnchorPane.getScene().getWindow().setY(event.getScreenY() - yOffset);
+            }
+        });
+
+
+        // Thread that starts progress bar animation and launches to next window
         new Thread() {
             @Override
             public void run() {
@@ -39,7 +55,7 @@ public class SplashController {
 
                 double splashProgress = 0;
 
-                while(splashProgressBar.getProgress() != 1) {
+                while(splashProgressBar.getProgress() <= 1) {
                     splashProgress = splashProgress + (Math.random() * 0.1);
 
                     try {
@@ -51,10 +67,14 @@ public class SplashController {
                 }
 
                 // Display the home screen
-
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        HomeScreenController.displayMe();
+                    }
+                });
             }
         }.start();
-
 
     }
 }
