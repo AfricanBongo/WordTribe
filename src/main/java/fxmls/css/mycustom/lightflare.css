@@ -1,0 +1,31 @@
+/*Home Screen, Anchor Pane layout by Donell Mtabvuri*/
+#mainBorderPane {
+    -fx-background-color: linear-gradient(from 0% 0% to 17% 100% , #96C0FF , #ffb4a1);
+}
+
+#mainLogo {
+    -fx-text-fill: white;
+    -fx-font-family: Ranchers;
+    -fx-font-size: 75px;
+}
+
+#openFileButton, #newFileButton {
+    -fx-text-fill: white;
+    -fx-background-color: transparent;
+    -fx-background-radius: 15px;
+    -fx-border-color: white;
+    -fx-border-radius: 15px;
+    -fx-border-width: 2px;
+}
+
+#openFileButton:hover, #newFileButton:hover {
+    -fx-background-color: white;
+    -fx-text-fill: linear-gradient(from 0% 0% to 17% 100% , #96C0FF , #ffb4a1);
+}
+
+#recentsLabel {
+    -fx-text-fill: black;
+    -fx-background-color: #ffffff;
+    -fx-font-family: "Roboto Medium";
+    -fx-font-size: 17;
+}

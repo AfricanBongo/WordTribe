@@ -1,0 +1,25 @@
+/*Splash Screen CSS*/
+
+#splashScreenPane {
+    -fx-background-color: linear-gradient(from 0% 0% to 17% 100% , #96C0FF , #ffb4a1);
+    -fx-background-radius: 25;
+    -fx-border-radius: 25;
+    -fx-border-width: 5;
+    -fx-border-color: white;
+}
+
+#loadingLabel {
+    -fx-text-fill: white;
+    -fx-font-family: "Noto Sans JP Regular";
+    -fx-font-size: 17px;
+}
+
+#purposeLabel {
+    -fx-text-fill: white;
+    -fx-font-family: "Rowdies Light";
+    -fx-font-size: 17px;
+}
+
+#splashProgressBar>.bar {
+    -fx-background-color: black;
+}

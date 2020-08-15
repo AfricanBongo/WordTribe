@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="splashScreenPane" prefHeight="185.0" prefWidth="598.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.wordtribe.Controllers.SplashController">
+
+    <!--            Logo-->
+    <Label id="mainLogo" layoutX="146.0" layoutY="14.0" prefHeight="96.0" prefWidth="333.0" text="Word Tribe" AnchorPane.leftAnchor="130.0" AnchorPane.rightAnchor="130.0" AnchorPane.topAnchor="14.0" />
+   <ProgressBar id="splashProgressBar" fx:id="splashProgressBar" layoutX="16.0" layoutY="170.0" prefHeight="8.0" prefWidth="568.0" progress="0.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+   <Label layoutX="453.0" layoutY="26.0" text="®">
+      <font>
+         <Font size="18.0" />
+      </font>
+   </Label>
+   <Label id="purposeLabel" layoutX="256.0" layoutY="109.0" text="Text Editor" />
+   <stylesheets>
+      <URL value="@css/mycustom/splashscreen.css" />
+      <URL value="@css/mycustom/lightflare.css" />
+   </stylesheets>
+
+</AnchorPane>
