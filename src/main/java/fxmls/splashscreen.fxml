@@ -6,10 +6,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="splashScreenPane" fx:id="splashAnchorPane" prefHeight="185.0" prefWidth="598.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.wordtribe.Controllers.SplashController">
+<AnchorPane id="splashScreenPane" fx:id="splashAnchorPane" prefHeight="185.0" prefWidth="598.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.wordtribe.controllers.SplashController">
 
     <!--            Logo-->
-    <Label id="mainLogo" layoutX="146.0" layoutY="14.0" prefHeight="96.0" prefWidth="333.0" text="Word Tribe" AnchorPane.leftAnchor="130.0" AnchorPane.rightAnchor="130.0" AnchorPane.topAnchor="14.0" />
+    <Label id="mainLogo" layoutX="146.0" layoutY="14.0" prefHeight="96.0" prefWidth="333.0" text="Word Tribe" AnchorPane.leftAnchor="134.0" AnchorPane.rightAnchor="134.0" AnchorPane.topAnchor="14.0" />
    <ProgressBar id="splashProgressBar" fx:id="splashProgressBar" layoutX="16.0" layoutY="170.0" prefHeight="8.0" prefWidth="568.0" progress="0.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
    <Label layoutX="453.0" layoutY="26.0" text="®">
       <font>
@@ -19,7 +19,7 @@
    <Label id="purposeLabel" layoutX="256.0" layoutY="109.0" text="Text Editor" />
    <stylesheets>
       <URL value="@css/mycustom/splashscreen.css" />
-      <URL value="@css/mycustom/lightflare.css" />
+      <URL value="@css/mycustom/lightflare/homeview.css" />
    </stylesheets>
 
 </AnchorPane>

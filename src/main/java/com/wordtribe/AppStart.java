@@ -1,6 +1,8 @@
 package com.wordtribe;
 
-import com.wordtribe.Loggers.WordInkLogger;
+import com.wordtribe.Logger.WordInkLogger;
+import com.wordtribe.controllers.LoadStages;
+import com.wordtribe.customcontrols.DisplayMessages;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -8,7 +10,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import scenecontroller.SceneController;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,38 +19,40 @@ public class AppStart extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+    private DisplayMessages displayMessages = new DisplayMessages();
 
-    private static SceneController sceneController;
-
-    public static SceneController getSceneController() {
-        return sceneController;
-    }
-
-    public static WordInkLogger wordInkLogger = new WordInkLogger("main");
 
     @Override
     public void start(Stage primaryStage) {
+        Pane pane;
 
-        primaryStage.initStyle(StageStyle.TRANSPARENT);
-        // Add home screen pane
+        // Load splashscreen fxml from disk
         try {
-            Pane pane =  FXMLLoader.load(getClass().getResource(".." + File.separator +".." + File.separator +
+            pane = FXMLLoader.load(getClass().getResource(".." + File.separator +".." + File.separator +
                     "fxmls"+ File.separator +"splashscreen.fxml"));
 
-            // Create main scene and load to scene controller
+            // Configure the main scene and open splash screen
             Scene main = new Scene(pane);
             main.setFill(Color.TRANSPARENT);
-            sceneController = new SceneController(main);
+            LoadStages.getLoader().setMain(main);
 
-            // Launch app
-            primaryStage.setResizable(false);
+            // Configure stage
+            primaryStage.initStyle(StageStyle.TRANSPARENT);
             primaryStage.setScene(main);
+            primaryStage.setResizable(false);
             primaryStage.show();
 
+        } catch (IOException e) {
+            WordInkLogger.getLogger().severe("Couldn't load the splash screen");
+            e.printStackTrace();
 
-        } catch (IOException e){
-            wordInkLogger.getLogger().severe("Error loading splash screen... " + e.getMessage());
+            // Display an error message and close the app
+            displayMessages.showError("Couldn't start the app properly, please restart the app\n" +
+                    "If the problem persists please report to the developer");
+            primaryStage.close();
         }
+
+
     }
 
 }

@@ -1,14 +1,18 @@
-package com.wordtribe.Data.PathHandlers;
-
+package com.wordtribe.data;
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 
+
+/*
+A TimedPath is an object that has a String name object, time object, path, and boolean instance.
+It can be saved to memory, used to access a file in the local disk
+ */
 public class TimedPath implements Serializable {
-    private LocalDateTime timeModified;
     private String path;  // Save path as string, as paths cannot be written using streams
-    private boolean lastOpened = false;
+    private LocalDateTime timeModified;
+    private boolean lastOpened;
 
 
     public TimedPath(String path) {
