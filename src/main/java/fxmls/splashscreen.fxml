@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="splashScreenPane" fx:id="splashAnchorPane" prefHeight="185.0" prefWidth="598.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.wordtribe.controllers.SplashController">
+<AnchorPane id="splashScreenPane" fx:id="splashAnchorPane" prefHeight="185.0" prefWidth="598.0" stylesheets="@css/mycustom/splashscreen.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.wordtribe.controllers.SplashController">
 
     <!--            Logo-->
     <Label id="mainLogo" layoutX="146.0" layoutY="14.0" prefHeight="96.0" prefWidth="333.0" text="Word Tribe" AnchorPane.leftAnchor="134.0" AnchorPane.rightAnchor="134.0" AnchorPane.topAnchor="14.0" />
@@ -17,9 +16,5 @@
       </font>
    </Label>
    <Label id="purposeLabel" layoutX="256.0" layoutY="109.0" text="Text Editor" />
-   <stylesheets>
-      <URL value="@css/mycustom/splashscreen.css" />
-      <URL value="@css/mycustom/lightflare/homeview.css" />
-   </stylesheets>
 
 </AnchorPane>

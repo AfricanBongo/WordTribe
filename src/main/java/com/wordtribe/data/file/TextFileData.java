@@ -3,6 +3,7 @@ package com.wordtribe.data.file;
 import com.wordtribe.data.TimedPath;
 import com.wordtribe.data.loadable.implementations.LoadTextFile;
 import com.wordtribe.data.savable.implementations.SaveTextFile;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ public class TextFileData extends AbstractFileData{
 
     public TextFileData(TimedPath filePath) {
         super(filePath, new LoadTextFile(), new SaveTextFile());
+        text = new SimpleStringProperty();
     }
 
     @Override

@@ -9,7 +9,7 @@ General logger for the whole program
  */
 public class WordInkLogger {
 
-    private static final Logger logger = Logger.getLogger("com.wordink");
+    private static final Logger logger = Logger.getLogger("com.wordtribe");
 
 
     // Create or find a new logger when constructed
@@ -22,7 +22,7 @@ public class WordInkLogger {
         try {
         // Get the log file path
         File directory = FileSystemView.getFileSystemView().getHomeDirectory();
-        String logsFile = directory.getPath() + File.separator + "Documents" + File.separator + "wordink.log";
+        String logsFile = directory.getPath() + File.separator + "Documents" + File.separator + "wordtribe.log";
 
         directory = new File(logsFile);
 

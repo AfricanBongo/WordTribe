@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 A TimedPath is an object that has a String name object, time object, path, and boolean instance.
 It can be saved to memory, used to access a file in the local disk
  */
-public class TimedPath implements Serializable {
+public class TimedPath implements Serializable, Comparable<TimedPath> {
     private String path;  // Save path as string, as paths cannot be written using streams
     private LocalDateTime timeModified;
     private boolean lastOpened;
@@ -49,4 +49,8 @@ public class TimedPath implements Serializable {
         this.lastOpened = lastOpened;
     }
 
+    @Override
+    public int compareTo(TimedPath timedPath) {
+        return timedPath.getTimeModified().compareTo(this.getTimeModified());
+    }
 }

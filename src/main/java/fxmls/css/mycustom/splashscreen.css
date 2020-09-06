@@ -23,3 +23,16 @@
 #splashProgressBar>.bar {
     -fx-background-color: black;
 }
+
+#recentsLabel {
+    -fx-text-fill: black;
+    -fx-background-color: #ffffff;
+    -fx-font-family: "Roboto Medium";
+    -fx-font-size: 17;
+}
+
+#mainLogo {
+    -fx-text-fill: white;
+    -fx-font-family: Ranchers;
+    -fx-font-size: 75px;
+}
