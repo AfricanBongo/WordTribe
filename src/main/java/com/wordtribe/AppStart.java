@@ -3,6 +3,7 @@ package com.wordtribe;
 import com.wordtribe.Logger.WordInkLogger;
 import com.wordtribe.controllers.LoadStages;
 import com.wordtribe.customcontrols.DisplayMessages;
+import com.wordtribe.data.OpenedPaths;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -51,8 +52,10 @@ public class AppStart extends Application {
                     "If the problem persists please report to the developer");
             primaryStage.close();
         }
-
-
     }
 
+    @Override
+    public void stop() throws Exception {
+        OpenedPaths.getOpenedPaths().savePaths();
+    }
 }

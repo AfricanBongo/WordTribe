@@ -11,6 +11,10 @@ public class LoadTextFile implements Loadable<String> {
 
     @Override
     public String load(Path path) throws IOException {
-        return Files.readString(path);
+        if (Files.exists(path)) {
+            return Files.readString(path);
+        }
+
+        return null;
     }
 }

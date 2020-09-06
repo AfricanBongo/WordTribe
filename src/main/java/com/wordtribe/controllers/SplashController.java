@@ -31,6 +31,11 @@ public class SplashController {
                     threadSleepTime = 25;
                 }
 
+                // If path list empty
+                if (OpenedPaths.getOpenedPaths().isEmpty()) {
+                    return null;
+                }
+
                 // Loop through path list
                 for (TimedPath timedPath : OpenedPaths.getOpenedPaths().getTimedPaths()) {
 

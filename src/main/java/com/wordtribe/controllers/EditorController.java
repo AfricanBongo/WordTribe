@@ -36,6 +36,11 @@ public class EditorController {
         // If a RecentFileMenuItem is clicked it should open a new Tab
         RecentFileMenuItemList.getMenuItemList().getMenuItems().forEach(recentFileMenuItem -> {
             recentFileMenuItem.setOnAction(event -> addTabFromRecents(recentFileMenuItem));
+
+            // Load tabs which weren't closed the last time the app was open
+            if (recentFileMenuItem.getTimedPath().isLastOpened()) {
+                addTabFromRecents(recentFileMenuItem);
+            }
         });
 
         // Functionality to menu items upon change
@@ -78,8 +83,15 @@ public class EditorController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open File");
 
+        Path path;
         // Get file given by user and create a TimedPath
-        Path path = fileChooser.showOpenDialog(LoadStages.getLoader().getCurrentStage()).toPath();
+        try {
+            path = fileChooser.showOpenDialog(LoadStages.getLoader().getCurrentStage()).toPath();
+        } catch (NullPointerException exception){
+            // Do nothing as no valid file path has been sent back
+            return;
+        }
+
 
         // Check if the path already exists within the app
         TimedPath timedPath = OpenedPaths.getOpenedPaths().checkTimedPath(path);
@@ -125,7 +137,6 @@ public class EditorController {
     public void addTabFromRecents(RecentFileMenuItem recentFileMenuItem) {
         openRecentMenu.getItems().remove(recentFileMenuItem);
         recentFileMenuItem.getTimedPath().setLastOpened(true);
-        addTab(recentFileMenuItem.getTimedPath());
 
         Platform.runLater(() -> {
             // Create new data instance to read data of the file

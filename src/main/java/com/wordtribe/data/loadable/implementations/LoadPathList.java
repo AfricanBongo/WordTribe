@@ -20,6 +20,10 @@ public class LoadPathList implements LoadableIterable<TimedPath> {
     public Iterable<TimedPath> load(Path loadPath) throws IOException {
         ObservableList<TimedPath> timedPaths = FXCollections.observableArrayList();
 
+        if (!Files.exists(loadPath)) {
+            Files.createFile(loadPath);
+        }
+
         try (ObjectInputStream pathsLoadStream = new ObjectInputStream(Files.newInputStream(loadPath))) {
             boolean eof = false;
 
@@ -33,9 +37,9 @@ public class LoadPathList implements LoadableIterable<TimedPath> {
                     eof = true;
                 }
             }
+        } finally {
+            return timedPaths;
         }
-
-        return timedPaths;
     }
 
 }
