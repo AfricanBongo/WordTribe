@@ -23,17 +23,17 @@ public class SplashController {
         checkOpenFiles = new Task<>() {
             @Override
             protected Void call() {
+                // If path list empty
+                if (OpenedPaths.getOpenedPaths().isEmpty()) {
+                    return null;
+                }
+
                 // Determine thread sleep time
                 int threadSleepTime;
                 if (OpenedPaths.getOpenedPaths().size() < 100) {
                     threadSleepTime = 100;
                 } else {
                     threadSleepTime = 25;
-                }
-
-                // If path list empty
-                if (OpenedPaths.getOpenedPaths().isEmpty()) {
-                    return null;
                 }
 
                 // Loop through path list

@@ -23,7 +23,8 @@ public class OpenedPaths extends ObservableListBase<TimedPath> {
     private SavePathList savePathList = new SavePathList();
     private static OpenedPaths openedPaths = new OpenedPaths();
 
-    private OpenedPaths() {}
+    private OpenedPaths() {
+    }
 
 
     //Initialize timedPaths list
@@ -40,12 +41,15 @@ public class OpenedPaths extends ObservableListBase<TimedPath> {
 
     @Override
     public int size() {
-        return sortedTimedPaths.size();
+        return timedPaths.size();
     }
 
 
     @Override
     public boolean add(TimedPath timedPath) {
+        if (checkTimedPath(timedPath.getPath()) != null) {
+            return false;
+        }
         return timedPaths.add(timedPath);
     }
 
@@ -56,7 +60,7 @@ public class OpenedPaths extends ObservableListBase<TimedPath> {
 
     @Override
     public boolean isEmpty() {
-        return sortedTimedPaths.isEmpty();
+        return timedPaths.isEmpty();
     }
 
     @Override
@@ -94,7 +98,7 @@ public class OpenedPaths extends ObservableListBase<TimedPath> {
 
     // Save paths to disk
     public void savePaths() throws IOException {
-        savePathList.save(Paths.get("OpenedPaths" + File.separator + "paths.dat"), sortedTimedPaths);
+        savePathList.save(Paths.get("OpenedPaths" + File.separator + "paths.dat"), timedPaths);
     }
 
     public static OpenedPaths getOpenedPaths() {

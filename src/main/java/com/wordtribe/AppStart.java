@@ -37,7 +37,7 @@ public class AppStart extends Application {
             main.setFill(Color.TRANSPARENT);
             LoadStages.getLoader().setMain(main);
 
-            // Configure stage
+            // Configure stage and show
             primaryStage.initStyle(StageStyle.TRANSPARENT);
             primaryStage.setScene(main);
             primaryStage.setResizable(false);

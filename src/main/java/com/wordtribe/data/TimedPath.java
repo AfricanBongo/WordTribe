@@ -53,4 +53,22 @@ public class TimedPath implements Serializable, Comparable<TimedPath> {
     public int compareTo(TimedPath timedPath) {
         return timedPath.getTimeModified().compareTo(this.getTimeModified());
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj instanceof TimedPath) {
+            return this.getPath().equals(((TimedPath) obj).getPath());
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getPath().hashCode();
+    }
 }

@@ -1,5 +1,6 @@
 package com.wordtribe.controllers;
 
+import com.wordtribe.Logger.WordInkLogger;
 import com.wordtribe.customcontrols.DisplayMessages;
 import com.wordtribe.customcontrols.RecentFileMenuItem;
 import com.wordtribe.customcontrols.RecentFileMenuItemList;
@@ -8,7 +9,9 @@ import com.wordtribe.data.OpenedPaths;
 import com.wordtribe.data.TimedPath;
 import com.wordtribe.data.file.TextFileData;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -18,8 +21,9 @@ import org.fxmisc.richtext.LineNumberFactory;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.function.Function;
+import java.util.List;
 
 public class EditorController {
 
@@ -27,6 +31,12 @@ public class EditorController {
     @FXML private Menu openRecentMenu;
     @FXML private Label caretPositionLabel;
     @FXML private TabPane editorTabPane;
+
+    @FXML private MenuItem saveItem;
+    @FXML private MenuItem saveAsItem;
+
+    // Extensions whose files can be opened using string methods
+    private ObservableList<FileChooser.ExtensionFilter> stringExtensionFilters;
 
     // Use to display messages to user
     private DisplayMessages displayMessages = new DisplayMessages();
@@ -68,11 +78,41 @@ public class EditorController {
         editorTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (!editorTabPane.getTabs().isEmpty()) {
                 LoadStages.getLoader().getCurrentStage().setTitle(newValue.getText());
+                saveItem.setVisible(true);
+                saveAsItem.setVisible(true);
             } else {
+                // Do not show save and saveAs menu items when no tab is open
+                saveItem.setVisible(false);
+                saveAsItem.setVisible(false);
                 LoadStages.getLoader().getCurrentStage().setTitle("Word Tribe");
                 caretPositionLabel.setText("");
             }
         });
+
+
+        // Do not show save and saveAs menu items when no tab is open when the app is started
+        if (editorTabPane.getTabs().isEmpty()) {
+            saveItem.setVisible(false);
+            saveAsItem.setVisible(false);
+        }
+
+        // Extensions able to be opened
+        stringExtensionFilters = FXCollections.observableArrayList(
+                new FileChooser.ExtensionFilter("Text", "*.txt"),
+                new FileChooser.ExtensionFilter("Java", "*.java"),
+                new FileChooser.ExtensionFilter("Python", "*.py"),
+                new FileChooser.ExtensionFilter("Gradle", "*.gradle"),
+                new FileChooser.ExtensionFilter("Bat file", "*.bat")
+        );
+        // All extensions option
+        List<String> allExtensions = new ArrayList<>();
+        stringExtensionFilters.forEach(extensionFilter -> {
+            allExtensions.add(extensionFilter.getExtensions().get(0));
+        });
+
+        System.out.println(allExtensions.toString());
+        stringExtensionFilters.add(new FileChooser.ExtensionFilter("All", allExtensions));
+
     }
 
 
@@ -82,6 +122,11 @@ public class EditorController {
         // Load File chooser
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open File");
+        fileChooser.getExtensionFilters().addAll(stringExtensionFilters);
+
+        // Set the all files extension as it's the last extension to be added
+        fileChooser.setSelectedExtensionFilter(fileChooser.getExtensionFilters()
+                .get(stringExtensionFilters.size() - 1));
 
         Path path;
         // Get file given by user and create a TimedPath
@@ -102,23 +147,16 @@ public class EditorController {
                     .getMenuItemList()
                     .checkMenuItem(timedPath);
 
-            if (recentFileMenuItem != null) {
-                // Check if the menu item is already open as a tab
-                for (Tab tab : editorTabPane.getTabs()) {
-                    if (((TextEditorTab) tab).getOpenFile().getFileTimedPath().equals(timedPath)) {
-                        // Focus tab if path already exists as tab
-                        editorTabPane.getSelectionModel().select(tab);
-                        return;
-                    }
+            // Focus tab if path already exists as tab
+            for (Tab tab : editorTabPane.getTabs()) {
+                if (((TextEditorTab) tab).getOpenFileData().getFileTimedPath().equals(timedPath)) {
+                    editorTabPane.getSelectionModel().select(tab);
+                    return;
                 }
-
-                // Open new tab if one isn't open for this menu item
-                addTabFromRecents(recentFileMenuItem);
-
-            } else {
-                // Create new menu item and open as Tab;
-                addTabFromRecents(RecentFileMenuItemList.getMenuItemList().addNewMenuItem(timedPath));
             }
+
+            // Open new tab if tab not already open
+            addTabFromRecents(recentFileMenuItem);
         } else {
             // Create new timed path, add to OpenedPaths list and open as Tab
             timedPath = new TimedPath(path.toString());
@@ -129,7 +167,7 @@ public class EditorController {
 
     // Opens a new tab in the tab pane
     public void addTab(TimedPath timedPath) {
-
+        // To-do
     }
 
 
@@ -149,41 +187,19 @@ public class EditorController {
                 displayMessages.showError("Couldn't load file from disk, please try again");
             }
 
-            // Produce string used to specifically identity the tab
-            Function<String, String> produceUnchangingName = filename -> {
-                char[] name = filename.substring(0, filename.indexOf(".")).toCharArray();
-                StringBuilder unchangingName = new StringBuilder();
-                for (char Char : name) {
-                    unchangingName.append(Char + 3);
-                }
-
-                return unchangingName.toString();
-            };
-
             // Create and configure new code area for the tab
             CodeArea codeArea = new CodeArea(textFileData.getInfo());
             codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
 
-            // Bind file data text with code area text property
-            textFileData.textProperty().bind(codeArea.textProperty());
-            TextEditorTab textEditorTab = new TextEditorTab(textFileData, codeArea,
-                    produceUnchangingName.apply(recentFileMenuItem.getTimedPath().getPath().getFileName().toString()));
+            // Create new text editor Tab
+            TextEditorTab textEditorTab = new TextEditorTab(textFileData, codeArea, recentFileMenuItem);
 
 
             textEditorTab.setClosable(true);
 
             // Update menu item and timed path when the tab is closed
             textEditorTab.setOnClosed(e -> {
-                recentFileMenuItem.getTimedPath().setLastOpened(false);
-                openRecentMenu.getItems().add(recentFileMenuItem);
-                recentFileMenuItem.getTimedPath().updateTimeModified();
-                // Sort items when the menu item is added to the list
-                openRecentMenu.getItems().sort(new Comparator<MenuItem>() {
-                    @Override
-                    public int compare(MenuItem menuItem, MenuItem t1) {
-                        return ((RecentFileMenuItem) menuItem).compareTo((RecentFileMenuItem) t1);
-                    }
-                });
+                updateMenuList(textEditorTab.getRecentFileMenuItem());
             });
 
             codeArea.caretPositionProperty().addListener((observable, oldValue, newValue) -> {
@@ -193,6 +209,76 @@ public class EditorController {
             // Create new tab and try to add it to set
             editorTabPane.getTabs().add(textEditorTab);
             editorTabPane.getSelectionModel().select(textEditorTab);
+        });
+    }
+
+
+    // Save current file data
+    public void save(TextEditorTab textEditorTab) {
+        // Save the current file data
+        try {
+            textEditorTab.getOpenFileData().save();
+        } catch (IOException e) {
+            WordInkLogger.getLogger().warning(e.getMessage() + "\n");
+            e.printStackTrace();
+        }
+    }
+
+
+    // Save method called from UI
+    @FXML
+    public void save() {
+        // Retrieve the selected tab
+        TextEditorTab textEditorTab = (TextEditorTab) editorTabPane.getSelectionModel().getSelectedItem();
+        save(textEditorTab);
+    }
+
+
+    // Rename file or move file to another location
+    @FXML
+    public void saveAs() {
+        FileChooser fileChooser = new FileChooser();
+        Path path = fileChooser.showSaveDialog(LoadStages.getLoader().getCurrentStage().getOwner()).toPath();
+
+        TimedPath timedPath = OpenedPaths.getOpenedPaths().checkTimedPath(path);
+        // If the path doesn't already exist in the app then add it
+        if (timedPath == null) {
+            // Retrieve the selected tab and rename the tab name
+            TextEditorTab textEditorTab = (TextEditorTab) editorTabPane.getSelectionModel().getSelectedItem();
+            textEditorTab.setText(path.getFileName().toString());
+
+            // Save the current file data
+            save(textEditorTab);
+
+            // Close the file path and add its corresponding menu item back to the list
+            timedPath = textEditorTab.getOpenFileData().getFileTimedPath();
+            updateMenuList(textEditorTab.getRecentFileMenuItem());
+
+            // Create a new timed path and menu item for the new saved file
+            // Then link the timed path with the text editor tab and its file data
+            timedPath = new TimedPath(path.toString());
+            textEditorTab.setRecentFileMenuItem(RecentFileMenuItemList.getMenuItemList().addNewMenuItem(timedPath));
+            textEditorTab.setOpenFileData(new TextFileData(timedPath));
+
+            // Save the new file path and its data
+            save(textEditorTab);
+
+        } else {
+            // Show info alert to user
+            displayMessages.showInfo("File error", "The file you're trying to save already exists");
+        }
+    }
+
+    public void updateMenuList(RecentFileMenuItem recentFileMenuItem) {
+        recentFileMenuItem.getTimedPath().setLastOpened(false);
+        openRecentMenu.getItems().add(recentFileMenuItem);
+        recentFileMenuItem.getTimedPath().updateTimeModified();
+        // Sort items when the menu item is added to the list
+        openRecentMenu.getItems().sort(new Comparator<MenuItem>() {
+            @Override
+            public int compare(MenuItem menuItem, MenuItem t1) {
+                return ((RecentFileMenuItem) menuItem).compareTo((RecentFileMenuItem) t1);
+            }
         });
     }
 
