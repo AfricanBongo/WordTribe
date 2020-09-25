@@ -30,7 +30,7 @@ public class AppStart extends Application {
         // Load splashscreen fxml from disk
         try {
             pane = FXMLLoader.load(getClass().getResource(".." + File.separator +".." + File.separator +
-                    "fxmls"+ File.separator +"splashscreen.fxml"));
+                    "fxmls" + File.separator +"splashscreen.fxml"));
 
             // Configure the main scene and open splash screen
             Scene main = new Scene(pane);

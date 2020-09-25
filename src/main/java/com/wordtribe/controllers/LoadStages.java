@@ -55,7 +55,7 @@ public class LoadStages {
             // Assign the home fxml to the scene
             try {
                 sceneController.addScreen("editor", FXMLLoader.load(AppStart.class.getResource(".." + File.separator +".." + File.separator +
-                        "fxmls"+ File.separator +"texteditor.fxml")));
+                        "fxmls" + File.separator +"texteditor.fxml")));
                 sceneController.displayPane("editor");
             } catch (IOException e) {
                 WordInkLogger.getLogger().severe("Failed to load the text editor..." + e.getMessage());

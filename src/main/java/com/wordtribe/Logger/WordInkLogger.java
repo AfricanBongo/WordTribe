@@ -1,6 +1,5 @@
 package com.wordtribe.Logger;
 
-import javax.swing.filechooser.FileSystemView;
 import java.io.*;
 import java.util.logging.Logger;
 
@@ -21,10 +20,7 @@ public class WordInkLogger {
 
         try {
         // Get the log file path
-        File directory = FileSystemView.getFileSystemView().getHomeDirectory();
-        String logsFile = directory.getPath() + File.separator + "Documents" + File.separator + "wordtribe.log";
-
-        directory = new File(logsFile);
+        File directory = new File("wordtribe.log");
 
         // Create new log file if one doesn't already exist
         if (!directory.exists()) {
