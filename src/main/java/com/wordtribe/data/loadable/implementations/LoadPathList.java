@@ -20,6 +20,12 @@ public class LoadPathList implements LoadableIterable<TimedPath> {
     public Iterable<TimedPath> load(Path loadPath) throws IOException {
         ObservableList<TimedPath> timedPaths = FXCollections.observableArrayList();
 
+
+        // Return null if not a file and if the load path is null
+        if (!Files.isRegularFile(loadPath) || loadPath == null) {
+            return timedPaths;
+        }
+
         if (!Files.exists(loadPath)) {
             Files.createFile(loadPath);
         }

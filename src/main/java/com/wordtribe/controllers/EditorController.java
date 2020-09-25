@@ -1,13 +1,13 @@
 package com.wordtribe.controllers;
 
 import com.wordtribe.Logger.WordInkLogger;
-import com.wordtribe.customcontrols.DisplayMessages;
 import com.wordtribe.customcontrols.RecentFileMenuItem;
 import com.wordtribe.customcontrols.RecentFileMenuItemList;
 import com.wordtribe.customcontrols.TextEditorTab;
 import com.wordtribe.data.OpenedPaths;
 import com.wordtribe.data.TimedPath;
 import com.wordtribe.data.file.TextFileData;
+import display.DisplayMessages;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -104,15 +104,27 @@ public class EditorController {
                 new FileChooser.ExtensionFilter("Gradle", "*.gradle"),
                 new FileChooser.ExtensionFilter("Bat file", "*.bat")
         );
+
         // All extensions option
         List<String> allExtensions = new ArrayList<>();
         stringExtensionFilters.forEach(extensionFilter -> {
             allExtensions.add(extensionFilter.getExtensions().get(0));
         });
 
-        System.out.println(allExtensions.toString());
         stringExtensionFilters.add(new FileChooser.ExtensionFilter("All", allExtensions));
 
+    }
+
+
+    // Used to create a new file
+    @FXML
+    public void newFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Create new file");
+        Path path = fileChooser.showSaveDialog(LoadStages.getLoader().getCurrentStage().getOwner()).toPath();
+
+        // Validate the path
+        checkOpenTab(path);
     }
 
 
@@ -137,17 +149,18 @@ public class EditorController {
             return;
         }
 
+        // Validate the path
+        checkOpenTab(path);
+    }
 
+
+    // Check if path exists as timed path with an open tab
+    public void checkOpenTab(Path path) {
         // Check if the path already exists within the app
         TimedPath timedPath = OpenedPaths.getOpenedPaths().checkTimedPath(path);
 
         if (timedPath != null) {
-            // Check if timed path already has a menu item
-            RecentFileMenuItem recentFileMenuItem = RecentFileMenuItemList
-                    .getMenuItemList()
-                    .checkMenuItem(timedPath);
-
-            // Focus tab if path already exists as tab
+            // Focus tab if tab is already open for the file
             for (Tab tab : editorTabPane.getTabs()) {
                 if (((TextEditorTab) tab).getOpenFileData().getFileTimedPath().equals(timedPath)) {
                     editorTabPane.getSelectionModel().select(tab);
@@ -156,7 +169,7 @@ public class EditorController {
             }
 
             // Open new tab if tab not already open
-            addTabFromRecents(recentFileMenuItem);
+            addTabFromRecents(RecentFileMenuItemList.getMenuItemList().checkMenuItem(timedPath));
         } else {
             // Create new timed path, add to OpenedPaths list and open as Tab
             timedPath = new TimedPath(path.toString());
@@ -164,6 +177,7 @@ public class EditorController {
             addTabFromRecents(RecentFileMenuItemList.getMenuItemList().addNewMenuItem(timedPath));
         }
     }
+
 
     // Opens a new tab in the tab pane
     public void addTab(TimedPath timedPath) {
@@ -173,43 +187,46 @@ public class EditorController {
 
     // Code run for files opened from the recents menu
     public void addTabFromRecents(RecentFileMenuItem recentFileMenuItem) {
-        openRecentMenu.getItems().remove(recentFileMenuItem);
-        recentFileMenuItem.getTimedPath().setLastOpened(true);
 
-        Platform.runLater(() -> {
-            // Create new data instance to read data of the file
-            TextFileData textFileData = new TextFileData(recentFileMenuItem.getTimedPath());
+        if (recentFileMenuItem != null) {
+            openRecentMenu.getItems().remove(recentFileMenuItem);
+            recentFileMenuItem.getTimedPath().setLastOpened(true);
 
-            // Load data into memory
-            try {
-                textFileData.load();
-            } catch (IOException | ClassNotFoundException e) {
-                displayMessages.showError("Couldn't load file from disk, please try again");
-            }
+            Platform.runLater(() -> {
+                // Create new data instance to read data of the file
+                TextFileData textFileData = new TextFileData(recentFileMenuItem.getTimedPath());
 
-            // Create and configure new code area for the tab
-            CodeArea codeArea = new CodeArea(textFileData.getInfo());
-            codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
+                // Load data into memory
+                try {
+                    textFileData.load();
+                } catch (IOException | ClassNotFoundException e) {
+                    displayMessages.showError("Couldn't load file from disk, please try again");
+                }
 
-            // Create new text editor Tab
-            TextEditorTab textEditorTab = new TextEditorTab(textFileData, codeArea, recentFileMenuItem);
+                // Create and configure new code area for the tab
+                CodeArea codeArea = new CodeArea(textFileData.getInfo());
+                codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
+
+                // Create new text editor Tab
+                TextEditorTab textEditorTab = new TextEditorTab(textFileData, codeArea, recentFileMenuItem);
 
 
-            textEditorTab.setClosable(true);
+                textEditorTab.setClosable(true);
 
-            // Update menu item and timed path when the tab is closed
-            textEditorTab.setOnClosed(e -> {
-                updateMenuList(textEditorTab.getRecentFileMenuItem());
+                // Update menu item and timed path when the tab is closed
+                textEditorTab.setOnClosed(e -> {
+                    updateMenuList(textEditorTab.getRecentFileMenuItem());
+                });
+
+                codeArea.caretPositionProperty().addListener((observable, oldValue, newValue) -> {
+                    caretPositionLabel.setText("Line: " + codeArea.getCurrentParagraph() + " Char: "+ codeArea.getCaretColumn());
+                });
+
+                // Create new tab and try to add it to set
+                editorTabPane.getTabs().add(textEditorTab);
+                editorTabPane.getSelectionModel().select(textEditorTab);
             });
-
-            codeArea.caretPositionProperty().addListener((observable, oldValue, newValue) -> {
-                caretPositionLabel.setText("Line: " + codeArea.getCurrentParagraph() + " Char: "+ codeArea.getCaretColumn());
-            });
-
-            // Create new tab and try to add it to set
-            editorTabPane.getTabs().add(textEditorTab);
-            editorTabPane.getSelectionModel().select(textEditorTab);
-        });
+        }
     }
 
 
@@ -269,6 +286,7 @@ public class EditorController {
         }
     }
 
+    // Add menu item back to the recent menu
     public void updateMenuList(RecentFileMenuItem recentFileMenuItem) {
         recentFileMenuItem.getTimedPath().setLastOpened(false);
         openRecentMenu.getItems().add(recentFileMenuItem);

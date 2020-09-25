@@ -2,8 +2,8 @@ package com.wordtribe;
 
 import com.wordtribe.Logger.WordInkLogger;
 import com.wordtribe.controllers.LoadStages;
-import com.wordtribe.customcontrols.DisplayMessages;
 import com.wordtribe.data.OpenedPaths;
+import display.DisplayMessages;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

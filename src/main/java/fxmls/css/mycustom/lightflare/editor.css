@@ -1,5 +1,5 @@
 #editorBorderPane {
-    -fx-background-color: linear-gradient(from 0% 0% to 17% 100% , #cbdae7, #e3a1ff);
+    -fx-background-color: #e3a1ff;
 }
 
 #editorTabPane, #caretPositionLabel {
@@ -62,7 +62,7 @@
 }
 
 #fileMenu .menu-item {
-    -fx-background-color: linear-gradient(from 0% 0% to 17% 100% , #cbdae7, #e3a1ff);
+    -fx-background-color: #e3a1ff;
 }
 
 #fileMenu .menu-item:hover {
@@ -82,12 +82,12 @@
 }
 
 #fileMenu .menu-item:hover .label {
-    -fx-text-fill: linear-gradient(from 0% 0% to 17% 100% , #cbdae7, #e3a1ff);
+    -fx-text-fill: #e3a1ff;
 }
 
 /* *****************************************************************************
 *                       Tab Pane and Tabs                                      *
-*                Credit to Vipul from StackOverflow                           *
+*                Credit to Vipul from StackOverflow for some of the work       *
 * https://stackoverflow.com/questions/19788661/change-javafx-tab-default-look  *
 ****************************************************************************** */
 .tab-pane .tab-header-area .tab-header-background {
@@ -102,23 +102,25 @@
     -fx-padding: 0.0em 0.166667em 0.0em 0.0em;
 }
 
+.tab .tab-close-button {
+    -fx-background-color: black;
+}
+
+.tab .tab-close-button:hover {
+    -fx-background-color: grey;
+}
+
 .tab {
-    -fx-background-insets: 0 1 0 1,0,0;
+    -fx-background-color: #e3a1ff;
+    -fx-background-insets: 0 0 0 0,0,0;
+    -fx-border-color: white;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
 }
 
-.tab-pane .tab {
-    -fx-background-color: #e3a1ff;
-    -fx-background-radius: 10 10 0 0;
-    -fx-border-width: 0.5 1 0 1;
-    -fx-border-radius: 10 10 0 0;
-    -fx-border-color: white;
-}
-
-.tab-pane .tab:selected {
+.tab:selected {
     -fx-background-color: white;
-    -fx-border-color: #e3a1ff;
+    -fx-border-color: white;
 }
 
 .tab .tab-label {

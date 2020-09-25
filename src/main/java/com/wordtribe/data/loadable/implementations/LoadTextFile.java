@@ -9,12 +9,13 @@ import java.nio.file.Path;
 // Loads a text file from disk
 public class LoadTextFile implements Loadable<String> {
 
+    // Return string from file
+    // If file doesn't exists create new one and return empty string
     @Override
     public String load(Path path) throws IOException {
-        if (Files.exists(path)) {
-            return Files.readString(path);
+        if (!Files.exists(path)) {
+            Files.createFile(path);
         }
-
-        return null;
+        return Files.readString(path);
     }
 }
