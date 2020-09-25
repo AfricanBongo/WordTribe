@@ -172,7 +172,7 @@ public class EditorController {
             addTabFromRecents(RecentFileMenuItemList.getMenuItemList().checkMenuItem(timedPath));
         } else {
             // Create new timed path, add to OpenedPaths list and open as Tab
-            timedPath = new TimedPath(path.toString());
+            timedPath = new TimedPath(path);
             OpenedPaths.getOpenedPaths().add(timedPath);
             addTabFromRecents(RecentFileMenuItemList.getMenuItemList().addNewMenuItem(timedPath));
         }
@@ -273,7 +273,7 @@ public class EditorController {
 
             // Create a new timed path and menu item for the new saved file
             // Then link the timed path with the text editor tab and its file data
-            timedPath = new TimedPath(path.toString());
+            timedPath = new TimedPath(path);
             textEditorTab.setRecentFileMenuItem(RecentFileMenuItemList.getMenuItemList().addNewMenuItem(timedPath));
             textEditorTab.setOpenFileData(new TextFileData(timedPath));
 

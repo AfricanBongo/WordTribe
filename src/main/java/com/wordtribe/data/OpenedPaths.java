@@ -17,6 +17,7 @@ import java.nio.file.Paths;
 Class that handles the TimedPaths once used or currently being used in the text editor
  */
 public class OpenedPaths extends ObservableListBase<TimedPath> {
+    private static final Path FINAL_PATH = Paths.get("OpenedPaths" + File.separator + "paths.dat");
     private static ObservableList<TimedPath> sortedTimedPaths;
     private static ObservableList<TimedPath> timedPaths;
     private LoadPathList loadPathList = new LoadPathList();
@@ -71,9 +72,11 @@ public class OpenedPaths extends ObservableListBase<TimedPath> {
 
     // Check if a timedPath already exists in the list
     public TimedPath checkTimedPath(Path path) {
-        for (TimedPath timedPath : sortedTimedPaths) {
-            if (timedPath.getPath().equals(path)) {
-                return timedPath;
+        if (path != null) {
+            for (TimedPath timedPath : sortedTimedPaths) {
+                if (timedPath.getPath().equals(path)) {
+                    return timedPath;
+                }
             }
         }
 
@@ -87,7 +90,7 @@ public class OpenedPaths extends ObservableListBase<TimedPath> {
     // Load paths from disk
     public ObservableList<TimedPath> loadPaths() {
         try {
-            return (ObservableList<TimedPath>) loadPathList.load(Paths.get("OpenedPaths" + File.separator + "paths.dat"));
+            return (ObservableList<TimedPath>) loadPathList.load(FINAL_PATH);
         } catch (IOException e) {
             WordInkLogger.getLogger().severe("Error loading timed paths from disk..." + e.getMessage());
             e.printStackTrace();
@@ -98,7 +101,7 @@ public class OpenedPaths extends ObservableListBase<TimedPath> {
 
     // Save paths to disk
     public void savePaths() throws IOException {
-        savePathList.save(Paths.get("OpenedPaths" + File.separator + "paths.dat"), timedPaths);
+        savePathList.save(FINAL_PATH, timedPaths);
     }
 
     public static OpenedPaths getOpenedPaths() {

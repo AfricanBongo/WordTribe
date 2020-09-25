@@ -15,12 +15,12 @@ public class TimedPath implements Serializable, Comparable<TimedPath> {
     private boolean lastOpened;
 
 
-    public TimedPath(String path) {
-        this.path = path;
+    public TimedPath(Path path) {
+        this.path = path.toString();
         timeModified = LocalDateTime.now();
     }
 
-    public TimedPath(String path, boolean lastOpened) {
+    public TimedPath(Path path, boolean lastOpened) {
         this(path);
         this.lastOpened = lastOpened;
     }
