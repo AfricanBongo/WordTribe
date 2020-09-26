@@ -1,5 +1,4 @@
-module WordTribe.main {
-    exports com.wordtribe;
+open module WordTribe.main {
     requires DisplayMessages;
     requires javafx.graphics;
     requires javafx.fxml;
